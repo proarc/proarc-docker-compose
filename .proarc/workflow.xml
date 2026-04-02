@@ -1,0 +1,1675 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<workflow xmlns="http://proarc.lib.cas.cz/xml/common/workflow/v1">
+	<version>WorkFlow_2025_04_01_Model_mapy.</version>
+	<!-- ************************************************************************
+******************** REGISTRACE MATERIÁLŮ **********************************
+ ************************************************************************** -->
+	<material name="material.physicalObject" type="PHYSICAL_DOCUMENT">
+		<title lang="cs">Bibliografický záznam</title>
+	</material>
+	<material name="material.folder.rawScan" type="FOLDER">
+		<title lang="cs">Adresář surových skenů</title>
+	</material>
+	<material name="material.folder.masterCopy" type="FOLDER">
+		<title lang="cs">Adresář upravených skenů</title>
+	</material>
+	<material name="material.folder.ocr" type="FOLDER">
+		<title lang="cs">Adresář souborů OCR</title>
+	</material>
+	<material name="material.digitalUUID" type="DIGITAL_OBJECT">
+		<title lang="cs">UUID digitálního objektu</title>
+	</material>
+	<material name="material.folder.Archive" type="FOLDER">
+		<title lang="cs">Adresář archivačního balíčku</title>
+	</material>
+	<material name="material.digitalDocument" type="DIGITAL_OBJECT">
+		<title lang="cs">Digitální dokument</title>
+	</material>
+	<material name="material.folder.OcrAndProcessedImages" type="FOLDER">
+		<title lang="cs">Adresář upravených skenů a OCR</title>
+	</material>
+	<!-- ***********************************************************************
+*** REGISTRACE EXTERNÍCH A DEFINICE INTERNÍCH ČÍSELNÍKŮ ****************
+************************************************************************** -->
+	<valuemap name="wf.valuemap.boolean">
+		<value key="0">Ne</value>
+		<value key="1">Ano</value>
+	</valuemap>
+	<valuemap name="proarc.device.scanner" source="PROARC"/>
+	<valuemap name="proarc.device.ocr" source="PROARC"/>
+	<valuemap name="wf.valuemap.imageColor">
+		<value key="BW">BW</value>
+		<value key="4 bit">4 bit</value>
+		<value key="8 bit">8 bit</value>
+		<value key="color">Barevně</value>
+	</valuemap>
+	<valuemap name="wf.valuemap.fileFormat">
+		<value>…</value>
+		<value>tif</value>
+		<value>tif s lzw</value>
+		<value>jp2</value>
+		<value>jpeg</value>
+		<value>pdf</value>
+		<value>txt</value>
+		<value>xml</value>
+	</valuemap>
+	<valuemap name="wf.valuemap.dpi">
+		<value>300</value>
+		<value>400</value>
+		<value>600</value>
+	</valuemap>
+	<valuemap name="wf.valuemap.lzw"/>
+	<valuemap name="wf.valuemap.scannerAll">
+		<value>CopiBook</value>
+		<value>Digibook</value>
+		<value>Fujitsu</value>
+		<value>Panasonic</value>
+		<value>Plustek</value>
+		<value>ProServ</value>
+		<value>Scanrobot</value>
+		<value>Suprascan A1</value>
+		<value>Zeutschel 15000</value>
+		<value>Zeutschel 7000</value>
+		<value>Zeutschel V</value>
+		<value>…</value>
+	</valuemap>
+	<valuemap name="wf.valuemap.scannerNow">
+		<value>CopiBook</value>
+		<value>Fujitsu</value>
+		<value>Plustek</value>
+		<value>Suprascan A1</value>
+		<value>…</value>
+	</valuemap>
+	<valuemap name="wf.valuemap.scannerSTT">
+		<value>Suprascan A1</value>
+		<value>Zeutschel V</value>
+	</valuemap>
+	<valuemap name="wf.valuemap.underlay">
+		<value>Bez podložení</value>
+		<value>Podložení bílou</value>
+		<value>Podložení černou</value>
+	</valuemap>
+	<valuemap name="wf.valuemap.PDFformat">
+		<value>...</value>
+		<value>PDF jednotlivých stran</value>
+		<value>Multi PDF </value>
+		<value>Vícevrstvé PDF jednotlivých stran</value>
+		<value>Vícevrstvé Multi PDF</value>
+	</valuemap>
+	<!-- ************************************************************************ 
+****************** DEFINICE TYPŮ PRÁCE *************************************
+************************************************************************** -->
+	<task name="task.updateBibRecordOwnCatalogue">
+		<title lang="cs">Aktualizace záznamu v Alephu (856+911)</title>
+		<hint lang="cs">Aktualizace bibliografického záznamu v katalogu vlastníka (doplnění polí 856 a 911).</hint>
+		<hint lang="en">Update of bibliographic record (own catalog)</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.archivacePackagePSPNDK">
+		<title lang="cs">Archivace balíčku PSP NDK</title>
+		<hint lang="cs">Archivace balíčků PSP NDK</hint>
+		<hint lang="en">Storage package PSP NDK</hint>
+		<setMaterial materialRef="material.folder.Archive" way="INPUT"/>
+	</task>
+	<task name="task.archivacePackageK4">
+		<title lang="cs">Archivace Exportu pro Krameria</title>
+		<hint lang="cs">Archivace Exportu pro Krameria</hint>
+		<hint lang="en">Storage Export Kramerius</hint>
+		<setMaterial materialRef="material.folder.Archive" way="INPUT"/>
+	</task>
+	<task name="task.archivacePuvodnichPDF">
+		<title lang="cs">Archivace původních PDF</title>
+		<hint lang="cs">Archivace původních PDF</hint>
+		<hint lang="en">Archivace původních PDF</hint>
+		<setMaterial materialRef="material.folder.Archive" way="INPUT"/>
+	</task>
+	<task name="task.archivaceRawSken">
+		<title lang="cs">Archivace surových skenů</title>
+		<hint lang="cs">Archivace surových skenů</hint>
+		<hint lang="en">Archiv raw skens</hint>
+		<setMaterial materialRef="material.folder.Archive" way="INPUT"/>
+	</task>
+	<task name="task.archivaceUpravenychPDF">
+		<title lang="cs">Archivace upravených PDF</title>
+		<hint lang="cs">Archivace upravených PDF</hint>
+		<hint lang="en">Archivace upravených PDF</hint>
+		<setMaterial materialRef="material.folder.Archive" way="INPUT"/>
+	</task>
+	<task name="task.archivaceUpravenychSkenuAOcr">
+		<title lang="cs">Archivace upravených skenů a OCR</title>
+		<hint lang="cs">Archivace upravených skenů a OCR</hint>
+		<hint lang="en">Archiving scanned scans and OCR</hint>
+		<setMaterial materialRef="material.folder.Archive" way="INPUT"/>
+		<setMaterial materialRef="material.folder.ocr" way="INPUT"/>
+	</task>
+	<task name="task.archivaceArchive">
+		<title lang="cs">Archivace zkompletovaného Archive balíčku</title>
+		<hint lang="cs">Archivace zkompletovaného Archive balíčku</hint>
+		<hint lang="en">Archive archived package package</hint>
+		<setMaterial materialRef="material.folder.Archive" way="INPUT"/>
+	</task>
+	<task name="task.ExportCEJSH">
+		<title lang="cs">CEJSH Export</title>
+		<hint lang="cs"/>
+		<hint lang="en"/>
+	</task>
+	<task name="task.exportCrossref">
+		<title lang="cs">Crossref Export</title>
+		<hint lang="cs"/>
+		<hint lang="en"/>
+	</task>
+	<task name="task.numberCnb">
+		<title lang="cs">Číslo ČNB</title>
+		<hint lang="cs">Přidělení čísla ČNB, pokud na něj má dokument nárok.</hint>
+		<hint lang="en">CNB number</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.deduplicate">
+		<title lang="cs">Deduplikace</title>
+		<hint lang="cs">Deduplikace.</hint>
+		<hint lang="en"/>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.exportArchive">
+		<title lang="cs">Export Archive </title>
+		<hint lang="cs">Export Archive balíčku</hint>
+		<hint lang="en">Export Archive Package</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+		<param name="param.exportArchive" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet exportovaných skenů s metadaty</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans</hint>
+		</param>
+	</task>
+	<task name="task.exportPDF">
+		<title lang="cs">Export PDF</title>
+		<hint lang="cs">Export PDF z Limbu</hint>
+		<hint lang="en">Export PDF Limb</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+	</task>
+	<task name="task.exportK4">
+		<title lang="cs">Export pro Krameria - FOXML</title>
+		<hint lang="cs">Provedení Exportu foxml z ProArcu. 2025 automaticky do testovacího Krameria.</hint>
+		<hint lang="en">Export K4</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+		<param name="param.exportK4" type="NUMBER">
+			<title lang="cs">Počet FOXML</title>
+			<hint lang="cs">Počet exportovaných FOXML Krameria</hint>
+			<title lang="en">Number of FOXML</title>
+			<hint lang="en">Number of FOXML</hint>
+		</param>
+	</task>
+	<task name="task.RdImportFinished">
+		<title lang="cs">Hlášení do RD (hotovo)</title>
+		<hint lang="cs">Hlášení digitalizace (stav Dokončeno) do Registru digitalizace.</hint>
+		<hint lang="en">Import to Digitisation Registry - status Completed</hint>
+	</task>
+	<task name="task.RdImportProgress">
+		<title lang="cs">Hlášení do RD (ve zpracování)</title>
+		<hint lang="cs">Hlášení digitalizace (stav Ve zpracování) do Registru digitalizace.</hint>
+		<hint lang="en">Import to Digitisation Registry - status In Process</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.DigitKnihovnaImport">
+		<title lang="cs">Importování do ostrého Krameria</title>
+		<hint lang="cs">Import do ostrého Krameria.</hint>
+		<hint lang="en">Import to Digital Library</hint>
+		<param name="param.DigitKnihovnaImport" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet importovaných FOXML Krameria</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans</hint>
+		</param>
+	</task>
+	<task name="task.kontrolaArchiveBalicku">
+		<title lang="cs">Kontrola archive balíčku</title>
+		<hint lang="cs">Kontrola archive balíčku</hint>
+		<hint lang="en">Control scans archivepack</hint>
+	</task>
+	<task name="task.kontrolaSkenovani">
+		<title lang="cs">Kontrola skenů 1:1</title>
+		<hint lang="cs">Kontrola počtu a kvality skenů1:1</hint>
+		<hint lang="en">Control scans</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+	</task>
+	<task name="task.kontrolaTestKramerius">
+		<title lang="cs">Kontrola v testovacím Krameriovi</title>
+		<hint lang="cs">Kontrola v testovacím Krameriovi</hint>
+		<hint lang="en">Control scans in test Kramerius</hint>
+	</task>
+	<task name="task.importTestKramerius">
+		<title lang="cs">Nahrání do testovacího Krameria</title>
+		<hint lang="cs">Nahrání do testovacího Krameria</hint>
+		<hint lang="en">Import to test Kramerius</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+	</task>
+	<task name="task.exportNdkPsp">
+		<title lang="cs">NDK PSP Export</title>
+		<hint lang="cs">Export balíčků z ProArcu - "NDK PSP Export" do ostrého Krameria.</hint>
+		<hint lang="en">Export of NDK PSP</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+		<param name="param.exportNdkPsp.numberOfPackages" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet vyexportovaných PSP</hint>
+			<title lang="en">Number of PSP</title>
+			<hint lang="en">Number of PSP</hint>
+		</param>
+	</task>
+	<task name="task.objednaniMVS">
+		<title lang="cs">Objednání MVS</title>
+		<hint lang="cs">Objednání MVS.</hint>
+		<hint lang="en">Ordering IIS.</hint>
+	</task>
+	<task name="task.ocr">
+		<title lang="cs">OCR</title>
+		<hint lang="cs">OCR</hint>
+		<hint lang="en">OCR</hint>
+	</task>
+	<task name="task.odbornaKontrolaKVO">
+		<title lang="cs">Odborná kontrola KVO</title>
+		<hint lang="cs">Odborná kontrola KVO</hint>
+		<hint lang="en">Odborná kontrola KVO</hint>
+	</task>
+	<task name="task.correction">
+		<title lang="cs">Oprava</title>
+		<hint lang="cs">Oprava.</hint>
+		<hint lang="en">Correction</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+		<setMaterial materialRef="material.folder.OcrAndProcessedImages" way="INPUT"/>
+	</task>
+	<task name="task.correctionArchiveBalicku">
+		<title lang="cs">Oprava archive balíčku</title>
+		<hint lang="cs">Oprava archivačního balíčku.</hint>
+		<hint lang="en"/>
+	</task>
+	<task name="task.correctionMetadata">
+		<title lang="cs">Oprava metadat</title>
+		<hint lang="cs">Oprava metadat na úrovni titulu a stran.</hint>
+		<hint lang="en">Correction metadats</hint>
+	</task>
+	<task name="task.correctionScans">
+		<title lang="cs">Oprava skenů</title>
+		<hint lang="cs">Oprava zpracování skenů.Přeskenování.</hint>
+		<hint lang="en"/>
+	</task>
+	<task name="task.PERO">
+		<title lang="cs">PERO</title>
+		<hint lang="cs">PERO</hint>
+		<hint lang="en">PERO</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+	</task>
+	<task name="task.pageMetadata">
+		<title lang="cs">Popis metadat stránek</title>
+		<hint lang="cs">Vytvoření popisných metadat v ProArcu - Import - příprava metadat pro načtení do úložiště.</hint>
+		<hint lang="en">Page metadata</hint>
+		<setMaterial materialRef="material.folder.masterCopy" way="INPUT"/>
+		<setMaterial materialRef="material.digitalDocument" way="OUTPUT"/>
+	</task>
+	<task name="task.metadataDescriptionInProArc">
+		<title lang="cs">Popis v ProArcu</title>
+		<hint lang="cs">Popis stran a přiřazení popsané dávky k digitálnímu objektu.</hint>
+		<hint lang="en">Metadata description in ProArc</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+	</task>
+	<task name="task.HandingOrder">
+		<title lang="cs">Předání hotové zakázky</title>
+		<hint lang="cs">Předání hotové zakázky na externí disk, FTP nebo DVD.</hint>
+		<hint lang="en">Handing over the finished orders to an external disk, ftp or DVD.</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+		<setMaterial materialRef="material.digitalDocument" way="OUTPUT"/>
+	</task>
+	<task name="task.rawScanLimb">
+		<title lang="cs">Předání skenů ke zpracování</title>
+		<hint lang="cs">Předání skenů z úložiště ke zpracování v Limbu</hint>
+		<hint lang="en">Transfer of scans for processing</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.scanRepaired">
+		<title lang="cs">Přesken</title>
+		<hint lang="cs">Přesken</hint>
+		<hint lang="en">Repair scan</hint>
+		<setMaterial materialRef="material.folder.rawScan" way="INPUT"/>
+		<param name="param.scanRepaired.numberOfScans" required="true" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet skenů</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans.</hint>
+		</param>
+		<param name="param.scanRepaired.scannerNew" required="true" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.scannerNow">
+			<title lang="cs">Skener</title>
+			<hint lang="cs">Skener</hint>
+			<title lang="en">Scanner</title>
+			<hint lang="en">Scanner</hint>
+		</param>
+		<param name="param.scanRepaired.imageColor" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.imageColor">
+			<title lang="cs">Barevnost</title>
+			<hint lang="cs">Barevnost</hint>
+			<title lang="en">Color</title>
+			<hint lang="en">Color</hint>
+		</param>
+		<param name="param.scanRepaired.dpi" type="NUMBER" datasource="wf.valuemap.dpi">
+			<title lang="cs">DPI</title>
+			<hint lang="cs">Rozlišení DPI</hint>
+			<title lang="en">dpi</title>
+			<hint lang="en">Dots per inch.</hint>
+		</param>
+		<param name="param.scanRepaired.underlay" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.underlay">
+			<title lang="cs">Podložení</title>
+			<hint lang="cs">Podložen každé strany jinou barvou.</hint>
+			<title lang="en">Underlay.</title>
+			<hint lang="en">Underlay.</hint>
+		</param>
+	</task>
+	<task name="task.transferNDKpage">
+		<title lang="cs">Převedení na NDK strany</title>
+		<hint lang="cs">Převod stran na NDK strany</hint>
+		<hint lang="en"/>
+	</task>
+	<task name="task.getItem">
+		<title lang="cs">Převzetí předlohy</title>
+		<hint lang="cs">Převzetí předlohy.</hint>
+		<hint lang="en">Getting item</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.AddDigitalObject">
+		<title lang="cs">Přidání digitálního objektu</title>
+		<hint lang="cs">Add a digital object</hint>
+		<hint lang="en">Add a digital object</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+		<param name="param.AddDigitalObject" type="NUMBER" datasource="wf.valuemap.PDFformat">
+			<title lang="cs">Přidání digitálního objektu</title>
+			<hint lang="cs">Přidání digitálního objektu</hint>
+			<title lang="en">Add a digital object</title>
+			<hint lang="en">Add a digital object</hint>
+		</param>
+	</task>
+	<task name="task.rawScanArchive">
+		<title lang="cs">Přidání surových skenů do Archive balíčku</title>
+		<hint lang="cs">Přidání surových skenů do Archive balíčku</hint>
+		<hint lang="en">Add raw scans to the Archive package</hint>
+		<setMaterial materialRef="material.folder.rawScan" way="INPUT"/>
+	</task>
+	<task name="task.recatalog">
+		<title lang="cs">Rekatalogizace</title>
+		<hint lang="cs">Rekatalogizace "s knihou v ruce" - jmenná, věcná, SK - aktualizace/import záznamu.</hint>
+		<hint lang="en">Recataloging</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.pageCutting">
+		<title lang="cs">Rozřezání stránek</title>
+		<hint lang="cs">Odeslání do vazárny a rozřezání neoddělených stránek.</hint>
+		<hint lang="en">Page cutting</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.unbindItem">
+		<title lang="cs">Rozvázání předlohy</title>
+		<hint lang="cs">Rozvolnění vazby předlohy (v případě pevné vazby, která znemožňuje naskenování).</hint>
+		<hint lang="en">Unbinding</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.scan">
+		<title lang="cs">Skenování </title>
+		<hint lang="cs">Skenování. Nové skenery.</hint>
+		<hint lang="en">Scanning</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+		<setMaterial materialRef="material.folder.rawScan" way="OUTPUT"/>
+		<param name="param.scan.numberOfScans" required="true" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet skenů</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans.</hint>
+		</param>
+		<param name="param.scan.scannerNew" required="true" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.scannerNow">
+			<title lang="cs">Skener</title>
+			<hint lang="cs">Přehled aktuálně používaných skenerů.</hint>
+			<title lang="en">Scanner</title>
+			<hint lang="en">New scanners</hint>
+		</param>
+		<param name="param.scan.imageColor" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.imageColor">
+			<title lang="cs">Barevnost</title>
+			<hint lang="cs">Barevnost</hint>
+			<title lang="en">Color</title>
+			<hint lang="en">Color</hint>
+		</param>
+		<param name="param.scan.dpi" type="NUMBER" datasource="wf.valuemap.dpi">
+			<title lang="cs">DPI</title>
+			<hint lang="cs">Rozlišení DPI</hint>
+			<title lang="en">dpi</title>
+			<hint lang="en">Dots per inch.</hint>
+		</param>
+		<param name="param.scan.underlay" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.underlay">
+			<title lang="cs">Podložení</title>
+			<hint lang="cs">Podložení každé strany jinou barvou.</hint>
+			<title lang="en">Underlay.</title>
+			<hint lang="en">Underlay.</hint>
+		</param>
+	</task>
+	<task name="task.scanSTT">
+		<title lang="cs">Skenování  STT</title>
+		<hint lang="cs">Skenování STT</hint>
+		<hint lang="en"/>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+		<setMaterial materialRef="material.folder.rawScan" way="OUTPUT"/>
+		<param name="param.scanSTT.numberOfScans" required="true" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet skenů</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans.</hint>
+		</param>
+		<param name="param.scanSTT.scannerSTT" required="true" displayType="COMBOBOX" datasource="wf.valuemap.scannerSTT">
+			<title lang="cs">Skener</title>
+			<hint lang="cs">Skenery vhodné pro STT</hint>
+			<title lang="en">Scanner</title>
+			<hint lang="en">STT scanners</hint>
+		</param>
+		<param name="param.scanSTT.imageColor" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.imageColor">
+			<title lang="cs">Barevnost</title>
+			<hint lang="cs">Barevnost</hint>
+			<title lang="en">Color</title>
+			<hint lang="en">Color</hint>
+		</param>
+		<param name="param.scanSTT.dpi" type="NUMBER" datasource="wf.valuemap.dpi">
+			<title lang="cs">DPI</title>
+			<hint lang="cs">Rozlišení DPI</hint>
+			<title lang="en">dpi</title>
+			<hint lang="en">Dots per inch.</hint>
+		</param>
+		<param name="param.scanSTT.underlay" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.underlay">
+			<title lang="cs">Podložení</title>
+			<hint lang="cs">Podložení každé strany jinou barvou.</hint>
+			<title lang="en">Underlay.</title>
+			<hint lang="en">Underlay.</hint>
+		</param>
+	</task>
+	<task name="task.scanOfCover">
+		<title lang="cs">Skenování desky a doskeny</title>
+		<hint lang="cs">Dodatečné skenování obálky a doskeny</hint>
+		<hint lang="en">Scanning of cover and illustrations</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+		<setMaterial materialRef="material.folder.rawScan" way="OUTPUT"/>
+		<param name="param.scanOfCover.numberOfScans" required="true" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet skenů</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans.</hint>
+		</param>
+		<param name="param.scanOfCover.scannerNew" required="true" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.scannerNow">
+			<title lang="cs">Skener</title>
+			<hint lang="cs">Skener</hint>
+			<title lang="en">Scanner</title>
+			<hint lang="en">Scanner</hint>
+		</param>
+		<param name="param.scanOfCover.imageColor" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.imageColor">
+			<title lang="cs">Barevnost</title>
+			<hint lang="cs">Barevnost</hint>
+			<title lang="en">Color</title>
+			<hint lang="en">Color</hint>
+		</param>
+		<param name="param.scanOfCover.dpi" type="NUMBER" datasource="wf.valuemap.dpi">
+			<title lang="cs">DPI</title>
+			<hint lang="cs">Rozlišení DPI</hint>
+			<title lang="en">dpi</title>
+			<hint lang="en">Dots per inch.</hint>
+		</param>
+		<param name="param.scanOfCover.underlay" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.underlay">
+			<title lang="cs">Podložení</title>
+			<hint lang="cs">Podložen každé strany jinou barvou.</hint>
+			<title lang="en">Underlay.</title>
+			<hint lang="en">Underlay.</hint>
+		</param>
+	</task>
+	<task name="task.scanOld">
+		<title lang="cs">Skenování dokončené dříve</title>
+		<hint lang="cs">Naskenováno dříve, převzato z úložiště.</hint>
+		<hint lang="en">Scanning</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+		<setMaterial materialRef="material.folder.rawScan" way="OUTPUT"/>
+		<param name="param.scanOld.numberOfScans" required="true" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet skenů</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans.</hint>
+		</param>
+		<param name="param.scanOld.scannerAll" required="true" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.scannerAll">
+			<title lang="cs">Skener</title>
+			<hint lang="cs">Přehled všech používaných skenerů.</hint>
+			<title lang="en">Scanner</title>
+			<hint lang="en">All scanners </hint>
+		</param>
+		<param name="param.scanOld.imageColor" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.imageColor">
+			<title lang="cs">Barevnost</title>
+			<hint lang="cs">Barevnost</hint>
+			<title lang="en">Color</title>
+			<hint lang="en">Color</hint>
+		</param>
+		<param name="param.scanOld.dpi" type="NUMBER" datasource="wf.valuemap.dpi">
+			<title lang="cs">DPI</title>
+			<hint lang="cs">Rozlišení DPI</hint>
+			<title lang="en">dpi</title>
+			<hint lang="en">Dots per inch.</hint>
+		</param>
+		<param name="param.scanOld.underlay" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.underlay">
+			<title lang="cs">Podložení</title>
+			<hint lang="cs">Podložení každé strany jinou barvou.</hint>
+			<title lang="en">Underlay.</title>
+			<hint lang="en">Underlay.</hint>
+		</param>
+		<param name="param.scanOld.date" required="true" displayType="TEXT">
+			<title lang="cs">Datum skenování</title>
+			<hint lang="cs">Datum skenování</hint>
+			<title lang="en">Date of scanning</title>
+			<hint lang="en">Date of scanning</hint>
+		</param>
+	</task>
+	<task name="task.scanMVS">
+		<title lang="cs">Skenování MVS</title>
+		<hint lang="cs">Skenování z MVS</hint>
+		<hint lang="en"/>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+		<setMaterial materialRef="material.folder.rawScan" way="OUTPUT"/>
+		<param name="param.scanMVS.numberOfScans" required="true" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet skenů</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans.</hint>
+		</param>
+		<param name="param.scanMVS.scannerNew" required="true" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.scannerNow">
+			<title lang="cs">Skener</title>
+			<hint lang="cs">Skener</hint>
+			<title lang="en">Scanner</title>
+			<hint lang="en">Scanner</hint>
+		</param>
+		<param name="param.scanMVS.imageColor" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.imageColor">
+			<title lang="cs">Barevnost</title>
+			<hint lang="cs">Barevnost</hint>
+			<title lang="en">Color</title>
+			<hint lang="en">Color</hint>
+		</param>
+		<param name="param.scanMVS.dpi" type="NUMBER" datasource="wf.valuemap.dpi">
+			<title lang="cs">DPI</title>
+			<hint lang="cs">Rozlišení DPI</hint>
+			<title lang="en">dpi</title>
+			<hint lang="en">Dots per inch.</hint>
+		</param>
+		<param name="param.scanMVS.underlay" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.underlay">
+			<title lang="cs">Podložení</title>
+			<hint lang="cs">Podložen každé strany jinou barvou.</hint>
+			<title lang="en">Underlay.</title>
+			<hint lang="en">Underlay.</hint>
+		</param>
+	</task>
+	<task name="task.scanMore">
+		<title lang="cs">Skenování prázdné</title>
+		<hint lang="cs">Skenování pro nadřazené úrovně.</hint>
+		<hint lang="en"/>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+		<setMaterial materialRef="material.folder.rawScan" way="OUTPUT"/>
+	</task>
+	<task name="task.deletionDC">
+		<title lang="cs">Smazání v DC</title>
+		<hint lang="cs">Smazat surové a zpracované skeny v DC</hint>
+		<hint lang="en"/>
+	</task>
+	<task name="task.deletionPA">
+		<title lang="cs">Smazání z ostrého ProArcu</title>
+		<hint lang="cs">Smazání z ostrého ProArcu</hint>
+		<hint lang="en"/>
+	</task>
+	<task name="task.rebindItem">
+		<title lang="cs">Svázání předlohy</title>
+		<hint lang="cs">Svázání / převazba předlohy.</hint>
+		<hint lang="en">Rebinding</hint>
+	</task>
+	<task name="task.imageProcessingOfCover">
+		<title lang="cs">Úprava doskenů Limb</title>
+		<hint lang="cs">Úprava doskenů - rozdělení dvoustran, narovnání, ořezy a další.</hint>
+		<hint lang="en">Processing of images (split pages, deskew, trimming etc.)</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+		<param name="param.imageProcessingOfCover.numberOfScans" required="true" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet skenů</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans</hint>
+		</param>
+		<param name="param.imageProcessingOfCover.format" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.PDFformat">
+			<title lang="cs">PDF</title>
+			<hint lang="cs">PDF</hint>
+			<title lang="en">PDF</title>
+			<hint lang="en">PDF</hint>
+		</param>
+		<param name="param.imageProcessingOfCover.splitting" displayType="CHECKBOX">
+			<title lang="cs">Rozřezání dvoustran</title>
+			<hint lang="cs">Rozřezání dvoustran</hint>
+			<title lang="en">Splitting of pages</title>
+			<hint lang="en">Splitting of pages</hint>
+		</param>
+		<param name="param.imageProcessingOfCover.crop" displayType="CHECKBOX">
+			<title lang="cs">Bez ořezu</title>
+			<hint lang="cs">Bez ořezu</hint>
+			<title lang="en">Without Crop</title>
+			<hint lang="en">Without Crop</hint>
+		</param>
+		<param name="param.imageProcessingOfCover.rotation" displayType="CHECKBOX">
+			<title lang="cs">Otočení</title>
+			<hint lang="cs">Otočení</hint>
+			<title lang="en">Image rotation</title>
+			<hint lang="en">Image rotation</hint>
+		</param>
+	</task>
+	<task name="task.imageProcessing">
+		<title lang="cs">Úprava skenů Limb</title>
+		<hint lang="cs">Úprava skenů - rozdělení dvoustran, narovnání, ořezy a další.</hint>
+		<hint lang="en">Processing of images (split pages, deskew, trimming etc.)</hint>
+		<setMaterial materialRef="material.folder.rawScan" way="INPUT"/>
+		<param name="param.imageProcessing.numberOfScans" required="true" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet skenů</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans</hint>
+		</param>
+		<param name="param.imageProcessing.format" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.PDFformat">
+			<title lang="cs">PDF</title>
+			<hint lang="cs">PDF</hint>
+			<title lang="en">PDF</title>
+			<hint lang="en">PDF</hint>
+		</param>
+		<param name="param.imageProcessing.splitting" displayType="CHECKBOX">
+			<title lang="cs">Rozřezání dvoustran</title>
+			<hint lang="cs">Rozřezání dvoustran</hint>
+			<title lang="en">Splitting of pages</title>
+			<hint lang="en">Splitting of pages</hint>
+		</param>
+		<param name="param.imageProcessing.crop" displayType="CHECKBOX">
+			<title lang="cs">Bez ořezu</title>
+			<hint lang="cs">Bez ořezu</hint>
+			<title lang="en">Without Crop</title>
+			<hint lang="en">Without Crop</hint>
+		</param>
+		<param name="param.imageProcessing.rotation" displayType="CHECKBOX">
+			<title lang="cs">Otočení</title>
+			<hint lang="cs">Otočení</hint>
+			<title lang="en">Image rotation</title>
+			<hint lang="en">Image rotation</hint>
+		</param>
+	</task>
+	<task name="task.imageProcessingMVS">
+		<title lang="cs">Úprava skenů MVS</title>
+		<hint lang="cs">Úprava skenů MVS</hint>
+		<hint lang="en">Processing of images (split pages, deskew, trimming etc.)</hint>
+		<setMaterial materialRef="material.folder.rawScan" way="INPUT"/>
+		<param name="param.imageProcessingMVS.numberOfScans" required="true" type="NUMBER">
+			<title lang="cs">Počet skenů</title>
+			<hint lang="cs">Počet skenů</hint>
+			<title lang="en">Number of scans</title>
+			<hint lang="en">Number of scans</hint>
+		</param>
+		<param name="param.imageProcessingMVS.format" type="STRING" displayType="COMBOBOX" datasource="wf.valuemap.PDFformat">
+			<title lang="cs">PDF</title>
+			<hint lang="cs">PDF</hint>
+			<title lang="en">PDF</title>
+			<hint lang="en">PDF</hint>
+		</param>
+		<param name="param.imageProcessingMVS.splitting" displayType="CHECKBOX">
+			<title lang="cs">Rozřezání dvoustran</title>
+			<hint lang="cs">Rozřezání dvoustran</hint>
+			<title lang="en">Splitting of pages</title>
+			<hint lang="en">Splitting of pages</hint>
+		</param>
+		<param name="param.imageProcessingMVS.crop" displayType="CHECKBOX">
+			<title lang="cs">Bez ořezu</title>
+			<hint lang="cs">Bez ořezu</hint>
+			<title lang="en">Without Crop</title>
+			<hint lang="en">Without Crop</hint>
+		</param>
+		<param name="param.imageProcessingMVS.rotation" displayType="CHECKBOX">
+			<title lang="cs">Otočení</title>
+			<hint lang="cs">Otočení</hint>
+			<title lang="en">Image rotation</title>
+			<hint lang="en">Image rotation</hint>
+		</param>
+	</task>
+	<task name="task.vraceniMVS">
+		<title lang="cs">Vrácení MVS</title>
+		<hint lang="cs">Vrácení MVS.</hint>
+		<hint lang="en">Return IIS.</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.returnItem">
+		<title lang="cs">Vrácení předlohy</title>
+		<hint lang="cs">Vrácení předlohy zpět (do skladu apod.).</hint>
+		<hint lang="en">Return of item</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.chooseTitle">
+		<title lang="cs">Výběr titulu</title>
+		<hint lang="cs">Výběr titulu k digitalizaci. </hint>
+		<hint lang="en">Choice of Title</hint>
+		<setMaterial materialRef="material.physicalObject" way="INPUT"/>
+	</task>
+	<task name="task.ExposureDeliveryNote">
+		<title lang="cs">Vystavení dodacího listu</title>
+		<hint lang="cs">Vyhotovení podkladů pro fakturaci.</hint>
+		<hint lang="en">Produce documentation for billing.</hint>
+	</task>
+	<task name="task.odkazAleph">
+		<title lang="cs">Zapsání odkazu do Alephu</title>
+		<hint lang="cs">Zapsání odkazu liku na titul v Krameriovi do Alephu.</hint>
+		<hint lang="en">Write a link to Aleph</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+		<setMaterial materialRef="material.digitalDocument" way="OUTPUT"/>
+	</task>
+	<task name="task.linkingToDigitalObject">
+		<title lang="cs">Zařazení do digitálního objektu</title>
+		<hint lang="cs">Připojení stran s vytvořenými popisnými metadaty k nadřazenému objektu.</hint>
+		<hint lang="en">Linking to digital object</hint>
+		<setMaterial materialRef="material.digitalDocument" way="INPUT"/>
+	</task>
+	<task name="task.backupArcLib">
+		<title lang="cs">Zazálohování v ArcLib</title>
+		<hint lang="cs">Zazálohování v ArcLib</hint>
+		<hint lang="en">Backup in ArcLib</hint>
+		<setMaterial materialRef="material.folder.Archive" way="INPUT"/>
+	</task>
+	<!-- ************************************************************************ 
+******************** DEFINICE PROFILŮ ************************************** 
+************************************************************************ -->
+<!-- *********************** DEFINICE PROFILŮ *********************** -->																		   
+	<!-- ****JOB: Monografie nová Plustek**** -->
+	<job name="job.monografienewPlustek" priority="2">
+		<model pid="model:ndkmonographvolume"/>
+		<model pid="model:ndkmonographunit"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Monografie nová Plustek</title>
+		<title lang="en">Monografie new Plustek</title>
+		<hint lang="cs">Monografie nová digitalizace. Skener Plustek.</hint>
+		<hint lang="en">Monografie</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scan">
+			<setParam paramRef="param.scan.numberOfScans"/>
+			<setParam paramRef="param.scan.scannerNew">Plustek</setParam>
+			<setParam paramRef="param.scan.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scan.dpi">400</setParam>
+			<setParam paramRef="param.scan.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Plustek</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.imageProcessing">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.monografiesupplement"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Monografie nová Fujitsu**** -->
+	<job name="job.monografienewFujitsu" priority="2">
+		<model pid="model:ndkmonographvolume"/>
+		<model pid="model:ndkmonographunit"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Monografie nová Fujitsu</title>
+		<title lang="en">Monografie new Fujitsu</title>
+		<hint lang="cs">Monografie nová digitalizace. Skener Fujitsu.</hint>
+		<hint lang="en">Monografie</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scan">
+			<setParam paramRef="param.scan.numberOfScans"/>
+			<setParam paramRef="param.scan.scannerNew">Fujitsu</setParam>
+			<setParam paramRef="param.scan.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scan.dpi">400</setParam>
+			<setParam paramRef="param.scan.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Fujitsu</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.imageProcessing">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.monografiesupplement"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Monografie nová CopiBook**** -->
+	<job name="job.monografienewCopiBook" priority="2">
+		<model pid="model:ndkmonographvolume"/>
+		<model pid="model:ndkmonographunit"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Monografie nová CopiBook</title>
+		<title lang="en">Monografie new</title>
+		<hint lang="cs">Monografie nová digitalizace. Skener CopiBook.</hint>
+		<hint lang="en">Monografie</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scan">
+			<setParam paramRef="param.scan.numberOfScans"/>
+			<setParam paramRef="param.scan.scannerNew">CopiBook</setParam>
+			<setParam paramRef="param.scan.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scan.dpi">400</setParam>
+			<setParam paramRef="param.scan.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">CopiBook</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.imageProcessing">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.monografiesupplement"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Monografie nová Suprascan A1**** -->
+	<job name="job.monografieSuprascanA1" priority="2">
+		<model pid="model:ndkmonographvolume"/>
+		<model pid="model:ndkmonographunit"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Monografie nová Suprascan A1</title>
+		<title lang="en">Monografie new Suprascan A1</title>
+		<hint lang="cs">Monografie nová digitalizace. Skener Suprascan A1.</hint>
+		<hint lang="en">Monografie</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scan">
+			<setParam paramRef="param.scan.numberOfScans"/>
+			<setParam paramRef="param.scan.scannerNew">Suprascan A1</setParam>
+			<setParam paramRef="param.scan.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scan.dpi">400</setParam>
+			<setParam paramRef="param.scan.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Suprascan A1</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.imageProcessing">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.monografiesupplement"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Monografie stará**** -->
+	<job name="job.monografieold" priority="2">
+		<model pid="model:ndkmonographvolume"/>
+		<model pid="model:ndkmonographunit"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Monografie z úložiště</title>
+		<title lang="en">Monografie old</title>
+		<hint lang="cs">Monografie naskenovaná, ze zálohy na úložišti.</hint>
+		<hint lang="en">Monografie</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scanOld">
+			<setParam paramRef="param.scanOld.numberOfScans"/>
+			<setParam paramRef="param.scanOld.scannerAll"/>
+			<setParam paramRef="param.scanOld.imageColor"/>
+			<setParam paramRef="param.scanOld.dpi"/>
+			<setParam paramRef="param.scanOld.underlay">Bez podložení</setParam>
+			<setParam paramRef="param.scanOld.date"/>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Plustek</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor"/>
+			<setParam paramRef="param.scanOfCover.dpi"/>
+			<setParam paramRef="param.scanOfCover.underlay">Bez podložení</setParam>
+		</step>
+		<step taskRef="task.imageProcessing">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.monografiesupplement"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ***** JOB: Vícedílná monografie  ***** -->
+	<job name="job.monografienewmore" priority="2">
+		<model pid="model:ndkmonographtitle"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Vícedílná monografie</title>
+		<title lang="en">Monografie_more</title>
+		<hint lang="cs">Monografie</hint>
+		<hint lang="en">Monografie</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scanMore"/>
+		<step taskRef="task.scanOfCover" optional="true"/>
+		<step taskRef="task.imageProcessing" optional="true"/>
+		<step taskRef="task.imageProcessingOfCover" optional="true"/>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.monografienewPlustek"/>
+		<subjob jobRef="job.monografienewFujitsu"/>
+		<subjob jobRef="job.monografienewCopiBook"/>
+		<subjob jobRef="job.monografieSuprascanA1"/>
+		<subjob jobRef="job.monografieold"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: STT **** -->
+	<job name="job.oldprintvolume" priority="2">
+		<model pid="model:oldprintvolume"/>
+		<model pid="model:oldprintmonographunit"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">STT nová digitalizace</title>
+		<title lang="en">Oldprintvolume</title>
+		<hint lang="cs">Staré tisky</hint>
+		<hint lang="en">Oldprintvolume</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scanSTT">
+			<setParam paramRef="param.scanSTT.numberOfScans"/>
+			<setParam paramRef="param.scanSTT.scannerSTT">Suprascan A1</setParam>
+			<setParam paramRef="param.scanSTT.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanSTT.dpi">400</setParam>
+			<setParam paramRef="param.scanSTT.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Suprascan A1</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.imageProcessing" optional="true">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani"/>
+		<step taskRef="task.PERO"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.oldprintsupplement"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: STT staré **** -->
+	<job name="job.oldprintvolumeold" priority="2">
+		<model pid="model:oldprintvolume"/>
+		<model pid="model:oldprintmonographunit"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">STT z úložiště</title>
+		<title lang="en">Oldprintvolume</title>
+		<hint lang="cs">Staré tisky naskenované dříve, ze zálohy na úložišti.</hint>
+		<hint lang="en">Oldprintvolume</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scanOld">
+			<setParam paramRef="param.scanOld.numberOfScans"/>
+			<setParam paramRef="param.scanOld.scannerAll">Digibook</setParam>
+			<setParam paramRef="param.scanOld.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOld.dpi">400</setParam>
+			<setParam paramRef="param.scanOld.underlay">Podložení černou</setParam>
+			<setParam paramRef="param.scanOld.date"/>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Suprascan A1</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.imageProcessing" optional="true">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani"/>
+		<step taskRef="task.PERO"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.oldprintsupplement"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Vícedílný STT**** -->
+	<job name="job.oldprintvolumemore" priority="2">
+		<model pid="model:oldprintmonographtitle"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Vícedílný STT</title>
+		<title lang="en">Oldprintvolumemore</title>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scanMore"/>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew"/>
+			<setParam paramRef="param.scanOfCover.imageColor"/>
+			<setParam paramRef="param.scanOfCover.dpi"/>
+			<setParam paramRef="param.scanOfCover.underlay"/>
+		</step>
+		<step taskRef="task.imageProcessing" optional="true">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.oldprintvolume"/>
+		<subjob jobRef="job.oldprintvolumeold"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Periodikum **** -->
+	<job name="job.periodical" priority="2">
+		<model pid="model:ndkperiodical"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Periodikum</title>
+		<title lang="en">Periodical</title>
+		<hint lang="cs">Periodikum</hint>
+		<hint lang="en">Periodical</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scanMore"/>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew"/>
+			<setParam paramRef="param.scanOfCover.imageColor"/>
+			<setParam paramRef="param.scanOfCover.dpi"/>
+			<setParam paramRef="param.scanOfCover.underlay"/>
+		</step>
+		<step taskRef="task.imageProcessing" optional="true">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.periodicalvolume"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Ročník periodika **** -->
+	<job name="job.periodicalvolume" priority="2">
+		<model pid="model:ndkperiodicalvolume"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Ročník periodika</title>
+		<title lang="en">Periodical volume</title>
+		<hint lang="cs">Ročník</hint>
+		<hint lang="en">Periodical</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scanMore"/>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew"/>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Bez podložení</setParam>
+		</step>
+		<step taskRef="task.imageProcessing" optional="true">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+		<subjob jobRef="job.periodicalissue"/>
+		<subjob jobRef="job.periodicalsupplement"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Výtisk periodika **** -->
+	<job name="job.periodicalissue" priority="2">
+		<model pid="model:ndkperiodicalissue"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Výtisk periodika</title>
+		<title lang="en">Periodical issue</title>
+		<hint lang="cs">Výtisk</hint>
+		<hint lang="en">Issue</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scan">
+			<setParam paramRef="param.scan.numberOfScans"/>
+			<setParam paramRef="param.scan.scannerNew">Plustek</setParam>
+			<setParam paramRef="param.scan.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scan.dpi">400</setParam>
+			<setParam paramRef="param.scan.underlay">Bez podložení</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Plustek</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Bez podložení</setParam>
+		</step>
+		<step taskRef="task.imageProcessing">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Příloha periodika **** -->
+	<job name="job.periodicalsupplement" priority="2">
+		<model pid="model:ndkperiodicalsupplement"/>
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Příloha periodika</title>
+		<title lang="en">Periodical supplement</title>
+		<hint lang="cs">Příloha ročníku nebo výtisku</hint>
+		<hint lang="en">Supplement</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scan">
+			<setParam paramRef="param.scan.numberOfScans"/>
+			<setParam paramRef="param.scan.scannerNew">Plustek</setParam>
+			<setParam paramRef="param.scan.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scan.dpi">400</setParam>
+			<setParam paramRef="param.scan.underlay">Bez podložení</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Plustek</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Bez podložení</setParam>
+		</step>
+		<step taskRef="task.imageProcessing">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Příloha NDK monografie**** -->
+	<job name="job.monografiesupplement" priority="2">
+		<model pid="model:ndkmonographsupplement"/>
+		<!-- *********************** model oldprintunitsupplement*********************** -->
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Příloha monografie</title>
+		<title lang="en">Monograph supplement</title>
+		<hint lang="cs">Příloha k monografii.</hint>
+		<hint lang="en">Monograph supplement</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scan">
+			<setParam paramRef="param.scan.numberOfScans"/>
+			<setParam paramRef="param.scan.scannerNew">Suprascan A1</setParam>
+			<setParam paramRef="param.scan.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scan.dpi">400</setParam>
+			<setParam paramRef="param.scan.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Suprascan A1</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.imageProcessing">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO" optional="true"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+	<!-- ****JOB: Příloha STT monografie**** -->
+	<job name="job.oldprintsupplement" priority="2">
+		<model pid="model:oldprintsupplement"/>
+		<!-- *********************** model oldprintunitsupplement*********************** -->
+		<!-- *** Vlastník *** -->
+		<!-- *** Lokalizace *** -->
+		<title lang="cs">Příloha k STT monografii </title>
+		<title lang="en">Oldprintsupplement</title>
+		<hint lang="cs">Příloha ke starému tisku</hint>
+		<hint lang="en">Oldprintsupplemen</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scanSTT">
+			<setParam paramRef="param.scanSTT.numberOfScans"/>
+			<setParam paramRef="param.scanSTT.scannerSTT">Suprascan A1</setParam>
+			<setParam paramRef="param.scanSTT.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanSTT.dpi">400</setParam>
+			<setParam paramRef="param.scanSTT.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Suprascan A1</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.imageProcessing" optional="true">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani"/>
+		<step taskRef="task.PERO"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+	</job>
+	<!-- *********************** DEFINICE PROFILŮ *********************** -->
+<!-- ****JOB: Další modely **** -->
+<job name="job.dalsimodely" priority="2">
+<model pid="model:ndkgraphic"/>
+<model pid="model:ndksheetmusic"/>
+<model pid="model:ndkmap"/>
+<model pid="model:oldprintgraphics"/>
+<model pid="model:oldprintsheetmusic"/>
+<model pid="model:oldprintmap"/>
+<!-- *** Vlastník *** -->
+<!-- *** Lokalizace *** -->
+<title lang="cs">Další modely</title>
+<title lang="en">Other models</title>
+<hint lang="cs">Grafika, Hudebnina, Kartografický dokument</hint>
+<hint lang="en">Graphics, Sheetmusic, Map</hint>
+		<!-- ***** Seznam úkolů ***** -->
+		<step taskRef="task.scan">
+			<setParam paramRef="param.scan.numberOfScans"/>
+			<setParam paramRef="param.scan.scannerNew">Suprascan A1</setParam>
+			<setParam paramRef="param.scan.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scan.dpi">400</setParam>
+			<setParam paramRef="param.scan.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.scanOfCover" optional="true">
+			<setParam paramRef="param.scanOfCover.numberOfScans"/>
+			<setParam paramRef="param.scanOfCover.scannerNew">Suprascan A1</setParam>
+			<setParam paramRef="param.scanOfCover.imageColor">Barevně</setParam>
+			<setParam paramRef="param.scanOfCover.dpi">400</setParam>
+			<setParam paramRef="param.scanOfCover.underlay">Podložení černou</setParam>
+		</step>
+		<step taskRef="task.imageProcessing" optional="true">
+			<setParam paramRef="param.imageProcessing.numberOfScans"/>
+			<setParam paramRef="param.imageProcessing.format"/>
+			<setParam paramRef="param.imageProcessing.splitting"/>
+			<setParam paramRef="param.imageProcessing.crop"/>
+			<setParam paramRef="param.imageProcessing.rotation"/>
+		</step>
+		<step taskRef="task.imageProcessingOfCover" optional="true">
+			<setParam paramRef="param.imageProcessingOfCover.numberOfScans"/>
+			<setParam paramRef="param.imageProcessingOfCover.format"/>
+			<setParam paramRef="param.imageProcessingOfCover.splitting"/>
+			<setParam paramRef="param.imageProcessingOfCover.crop"/>
+			<setParam paramRef="param.imageProcessingOfCover.rotation"/>
+		</step>
+		<step taskRef="task.kontrolaSkenovani" optional="true"/>
+		<step taskRef="task.PERO"/>
+		<step taskRef="task.metadataDescriptionInProArc"/>
+		<step taskRef="task.exportK4">
+			<setParam paramRef="param.exportK4"/>
+		</step>
+		<step taskRef="task.exportNdkPsp">
+			<setParam paramRef="param.exportNdkPsp.numberOfPackages"/>
+		</step>
+		<step taskRef="task.DigitKnihovnaImport" optional="true">
+			<setParam paramRef="param.DigitKnihovnaImport"/>
+		</step>
+		<step taskRef="task.exportArchive">
+			<setParam paramRef="param.exportArchive"/>
+		</step>
+		<step taskRef="task.archivaceArchive" optional="true"/>
+		<step taskRef="task.deletionPA"/>
+	</job>
+</workflow>

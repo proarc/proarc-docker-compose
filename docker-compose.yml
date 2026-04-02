@@ -1,0 +1,79 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:18.3
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: proarc
+      POSTGRES_USER: proarcAdmin
+      POSTGRES_PASSWORD: proarc
+    volumes:
+      - ./.containers/postgres:/var/lib/postgresql
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U proarcAdmin -d proarc" ]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: "always"
+
+  postgres_backup:
+    image: prodrigestivill/postgres-backup-local
+    links:
+      - postgres
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_DB=proarc
+      - POSTGRES_USER=proarcAdmin
+      - POSTGRES_PASSWORD=proarc
+      - POSTGRES_EXTRA_OPTS=-Z9 --schema=public --blobs
+      - SCHEDULE=0 0 23 * * *
+      - BACKUP_KEEP_DAYS=7
+      - BACKUP_KEEP_WEEKS=1
+      - BACKUP_KEEP_MONTHS=1
+      - HEALTHCHECK_PORT=81
+    volumes:
+      - ./.containers/backups/postgres:/backups
+    restart: "always"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  solr:
+    image: solr:9.7.0
+    ports:
+      - "8983:8983"
+    environment:
+      - SOLR_OPTS=-Dsolr.config.lib.enabled=true
+      - JAVA_OPTS="-Xms4g -Xmx4g"
+      - "SOLR_JAVA_MEM=-Xms4g -Xmx4g"
+    volumes:
+      - ./.containers/solr/cores/loggingCore:/var/solr/data/loggingCore
+      - ./.containers/solr/cores/searchCore:/var/solr/data/searchCore
+      - ./.containers/solr/logs:/var/solr/logs
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8983/solr/admin/info/system" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    restart: "always"
+
+  proarc:
+    image: ghcr.io/proarc/proarc-docker:5.0.2
+    ports:
+      - "8080:8080"
+    environment:
+      - JAVA_OPTS=-Dfile.encoding=UTF-8 -Xmx8g -Xms4g
+    volumes:
+      - ./.containers/tomcat/logs:/usr/local/tomcat/logs
+      - ./.containers/tomcat/conf/context.xml:/usr/local/tomcat/conf/context.xml
+      - ./.containers/proarc/storage:/data/storage
+      - ./.containers/proarc/krameriusImport:/data/krameriusImport
+      - ./.proarc:/root/.proarc
+    restart: "always"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      solr:
+        condition: service_healthy
