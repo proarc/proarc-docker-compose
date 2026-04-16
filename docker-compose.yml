@@ -71,9 +71,34 @@ services:
       - ./.containers/proarc/storage:/data/storage
       - ./.containers/proarc/krameriusImport:/data/krameriusImport
       - ./.proarc:/root/.proarc
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/proarc/" ]
+      interval: 5s
+      timeout: 5s
+      retries: 3
     restart: "always"
     depends_on:
       postgres:
         condition: service_healthy
       solr:
+        condition: service_healthy
+
+  httpd:
+    image: ghcr.io/proarc/proarc-client-docker:2.4.2
+    container_name: apache
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./.containers/httpd/vhosts:/usr/local/apache2/conf/vhosts
+      - ./.containers/httpd/certs/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
+      - ./.containers/httpd/certs/privkey.pem:/etc/ssl/private/privkey.pem:ro 
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 3
+    restart: "always"
+    depends_on:
+      proarc:
         condition: service_healthy
