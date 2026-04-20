@@ -62,7 +62,7 @@ services:
   proarc:
     image: ghcr.io/proarc/proarc-docker:5.0.2
     ports:
-      - "8080:8080"
+      - "8088:8080"
     environment:
       - JAVA_OPTS=-Dfile.encoding=UTF-8 -Xmx8g -Xms4g
     volumes:
