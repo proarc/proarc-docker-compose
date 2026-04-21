@@ -85,10 +85,11 @@ services:
 
   httpd:
     image: ghcr.io/proarc/proarc-client-docker:2.4.2
-    container_name: apache
     ports:
       - "80:80"
       - "443:443"
+    environment:
+      - VHOST_SERVER_NAME=ansible-proarc.inovatika.dev
     volumes:
       - ./.containers/httpd/vhosts:/usr/local/apache2/conf/vhosts
       - ./.containers/httpd/certs/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
