@@ -60,7 +60,7 @@ services:
     restart: "always"
 
   proarc:
-    image: ghcr.io/proarc/proarc-docker:5.0.2
+    image: ghcr.io/proarc/proarc-docker:5.0.3
     ports:
       - "8088:8080"
     environment:
