@@ -84,7 +84,7 @@ services:
         condition: service_healthy
 
   httpd:
-    image: ghcr.io/proarc/proarc-client-docker:2.4.2
+    image: ghcr.io/proarc/proarc-client-docker:2.4.3
     ports:
       - "80:80"
       - "443:443"
