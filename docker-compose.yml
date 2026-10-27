@@ -46,8 +46,8 @@ services:
       - "127.0.0.1:8983:8983"
     environment:
       - SOLR_OPTS=-Dsolr.config.lib.enabled=true
-      - JAVA_OPTS="-Xms4g -Xmx4g"
-      - "SOLR_JAVA_MEM=-Xms4g -Xmx4g"
+      - JAVA_OPTS=${SOLR_JAVA_OPTS}
+      - SOLR_JAVA_MEM=${SOLR_JAVA_MEM}
     volumes:
       - ./.containers/solr/cores/loggingCore:/var/solr/data/loggingCore
       - ./.containers/solr/cores/searchCore:/var/solr/data/searchCore
@@ -64,7 +64,7 @@ services:
     ports:
       - "8088:8080"
     environment:
-      - JAVA_OPTS=-Dfile.encoding=UTF-8 -Xmx8g -Xms4g
+      - JAVA_OPTS=-Dfile.encoding=UTF-8 ${PROARC_JAVA_OPTS}
     volumes:
       - ./.containers/tomcat/logs:/usr/local/tomcat/logs
       - ./.containers/tomcat/conf/context.xml:/usr/local/tomcat/conf/context.xml
