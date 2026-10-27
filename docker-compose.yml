@@ -89,7 +89,7 @@ services:
       - "80:80"
       - "443:443"
     environment:
-      - VHOST_SERVER_NAME=ansible-proarc.inovatika.dev
+      - VHOST_SERVER_NAME=${WEB_CLIENT_DOMAIN}
     volumes:
       - ./.containers/httpd/vhosts:/usr/local/apache2/conf/vhosts
       - ./.containers/httpd/certs/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
