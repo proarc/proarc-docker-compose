@@ -88,10 +88,12 @@ services:
       - "443:443"
     environment:
       - VHOST_SERVER_NAME=${WEB_CLIENT_DOMAIN}
+      - VHOST_SSL_CERT_FILE=${SSL_CERT_FILE}
+      - VHOST_SSL_CERT_KEY_FILE=${SSL_CERT_KEY_FILE}
     volumes:
       - ./.containers/httpd/vhosts:/usr/local/apache2/conf/vhosts
-      - ./.containers/httpd/certs/fullchain.pem:/etc/ssl/certs/fullchain.pem:ro
-      - ./.containers/httpd/certs/privkey.pem:/etc/ssl/private/privkey.pem:ro 
+      - ./.containers/httpd/certs/${SSL_CERT_FILE}:/etc/ssl/certs/${SSL_CERT_FILE}:ro
+      - ./.containers/httpd/certs/${SSL_CERT_KEY_FILE}:/etc/ssl/private/${SSL_CERT_KEY_FILE}:ro 
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost"]
       interval: 5s
