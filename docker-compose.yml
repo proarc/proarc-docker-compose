@@ -68,7 +68,7 @@ services:
       - ./.containers/tomcat/conf/context.xml:/usr/local/tomcat/conf/context.xml
       - ./.containers/proarc/storage:/data/storage
       - ./.containers/proarc/krameriusImport:/data/krameriusImport
-      - ./.proarc:/root/.proarc
+      - ./.proarc:/home/proarc/.proarc
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8080/proarc/" ]
       interval: 5s
