@@ -63,6 +63,8 @@ services:
       - "8088:8080"
     environment:
       - JAVA_OPTS=-Dfile.encoding=UTF-8 ${PROARC_JAVA_OPTS}
+      - PROARC_UID=${PROARC_UID}
+      - PROARC_GID=${PROARC_GID}
     volumes:
       - ./.containers/tomcat/logs:/usr/local/tomcat/logs
       - ./.containers/tomcat/conf/context.xml:/usr/local/tomcat/conf/context.xml
