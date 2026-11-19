@@ -1,6 +1,7 @@
 services:
   postgres:
     image: postgres:${POSTGRES_VERSION}
+    container_name: proarc_postgres
     ports:
       - "5432:5432"
     environment:
@@ -18,6 +19,7 @@ services:
 
   postgres_backup:
     image: prodrigestivill/postgres-backup-local
+    container_name: proarc_postgres_backup
     links:
       - postgres
     environment:
@@ -40,6 +42,7 @@ services:
 
   solr:
     image: solr:${SOLR_VERSION}
+    container_name: proarc_solr
     ports:
       - "127.0.0.1:8983:8983"
     environment:
@@ -58,6 +61,7 @@ services:
 
   proarc:
     image: ghcr.io/proarc/proarc-docker:${CORE_VERSION}
+    container_name: proarc_core
     ports:
       - "8088:8080"
     environment:
@@ -84,6 +88,7 @@ services:
 
   httpd:
     image: ghcr.io/proarc/proarc-client-docker:${WEB_CLIENT_VERSION}
+    container_name: proarc_httpd
     ports:
       - "80:80"
       - "443:443"
